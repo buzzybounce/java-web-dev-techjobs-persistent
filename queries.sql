@@ -16,4 +16,5 @@ DROP TABLE `techjobs`.`job`;
 SELECT name, description
 FROM skill
 LEFT JOIN job_skills ON skill.id = job_skills.skills_id
-WHERE jobs_id is NOT NULL;
+WHERE jobs_id is NOT NULL
+ORDER BY name ASC;
