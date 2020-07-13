@@ -20,7 +20,7 @@ public class SkillController {
     private SkillRepository skillRepository;
 
     @GetMapping("add")
-    public String displayAddSkillForm (Model model) {
+    public String displayAddSkillForm(Model model) {
 
         model.addAttribute(new Skill());
 
@@ -29,8 +29,8 @@ public class SkillController {
     }
 
     @PostMapping("add")
-    public String processAddSkillForm (@ModelAttribute @Valid Skill newSkill,
-                                       Errors errors, Model model) {
+    public String processAddSkillForm(@ModelAttribute @Valid Skill newSkill,
+                                      Errors errors, Model model) {
 
         if (errors.hasErrors()) {
 
@@ -47,12 +47,20 @@ public class SkillController {
     public String displayViewEmployer(Model model, @PathVariable int skillId) {
 
         Optional optSkill = skillRepository.findById(skillId);
+
         if (optSkill.isPresent()) {
+
             Skill skill = (Skill) optSkill.get();
             model.addAttribute("skill", skill);
+
             return "skill/view";
+
         } else {
+
             return "redirect:../";
+
         }
+
+    }
 
 }
