@@ -19,6 +19,15 @@ public class SkillController {
     @Autowired
     private SkillRepository skillRepository;
 
+    @GetMapping
+    public String displaySkills (Model model) {
+
+        model.addAttribute("skills", skillRepository.findAll());
+
+        return "skills/index";
+
+    }
+
     @GetMapping("add")
     public String displayAddSkillForm(Model model) {
 
@@ -53,7 +62,7 @@ public class SkillController {
             Skill skill = (Skill) optSkill.get();
             model.addAttribute("skill", skill);
 
-            return "skill/view";
+            return "skills/view";
 
         } else {
 
