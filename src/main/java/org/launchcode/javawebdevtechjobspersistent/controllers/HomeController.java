@@ -52,11 +52,20 @@ public class HomeController {
     @PostMapping("add")
     public String processAddJobForm(@ModelAttribute @Valid Job newJob,
                                        Errors errors, Model model, @RequestParam Integer employerId,
-                                    @RequestParam List<Integer> skills) {
+                                    @RequestParam (required = false) List<Integer> skills) {
+
+        // Checks to see if there's an error based on the validity of the input the user entered
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Job");
+            model.addAttribute("employers", employerRepository.findAll());
+            model.addAttribute("skills", skillRepository.findAll());
+            return "add";
+        }
 
         Optional<Employer> result = employerRepository.findById(employerId);
-        List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
 
+        // This if statement may never me iterated upon but doesn't hurt to have just incase
+        // an invalid employerId is sent by whatever means.
         if (result.isEmpty()) {
 
             model.addAttribute("title", "Add Job");
@@ -64,17 +73,22 @@ public class HomeController {
 
         }
 
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "Add Job");
-            return "add";
+        // This if statement checks if there's skill(s) provided for a Job Listing
+        // But if there's no skill provided, pass through this.
+        if (skills != null) {
+
+            List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
+            newJob.addSkill(skillObjs);
+
         }
+
+
+
 
         Employer employer = result.get();
         newJob.setEmployer(employer);
-        newJob.addSkill(skillObjs);
 
         jobRepository.save(newJob);
-
 
         return "redirect:";
     }
